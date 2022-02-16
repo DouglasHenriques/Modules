@@ -1,0 +1,91 @@
+package analyser;
+
+import java.io.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Project {
+
+    
+     HashMap<String, Integer> map = new HashMap<String, Integer>();
+
+    public static void main(String[] args){
+
+        Project project = new Project();
+
+        Scanner INPUT_TEXT = project.readFile();
+
+        project.analyse(INPUT_TEXT);
+
+        project.showResults();
+
+    }
+
+    
+    public void analyse(Scanner scanner) {
+
+        String pattern = "[a-zA-Z'-]+";
+        Pattern r = Pattern.compile(pattern);
+
+        while (scanner.hasNext()) {
+            
+            String Stringcandidate = scanner.next();
+
+            
+            Matcher matcher = r.matcher(Stringcandidate);
+            if (matcher.find()) {
+                String matchedWord = matcher.group();
+                
+                this.addWord(matchedWord);
+
+            }
+
+        }
+        scanner.close();
+    }
+
+   
+    public void addWord(String matchedWord) {
+
+        if (map.containsKey(matchedWord)) {
+            
+            int occurrence = map.get(matchedWord);
+            occurrence++;
+            map.put(matchedWord, occurrence);
+        } else {
+            
+            map.put(matchedWord, 1);
+        }
+
+    }
+
+   
+    public Scanner readFile() {
+
+        Scanner scanner = null;
+        try { scanner = new Scanner(new File("textFile.txt")); }
+        catch (Exception e) {
+        e.printStackTrace(); }
+        
+        
+
+        return scanner;
+    }
+
+    
+    public void showResults() {
+
+        for (HashMap.Entry<String, Integer> matchedWord : map.entrySet()) {
+            int occurrence = matchedWord.getValue();
+            System.out.print("\"" + matchedWord.getKey() + "\" appears " + occurrence);
+            if (occurrence > 1) {
+                System.out.print(" times\n");
+            } else {
+                System.out.print(" time\n");
+            }
+        }
+
+        
+    }
+}
